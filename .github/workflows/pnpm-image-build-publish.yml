@@ -24,7 +24,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ node-version }}
+          node-version: ${{ inputs.node-version }}
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -33,5 +33,5 @@ jobs:
         run: pnpm install
 
       - name: Lint script
-        run: pnpm ${{ pnpm-lint-script }}
+        run: pnpm ${{ inputs.pnpm-lint-script }}
   
