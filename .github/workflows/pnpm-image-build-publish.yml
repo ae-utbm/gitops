@@ -1,14 +1,10 @@
 on:
   workflow_call:
     inputs:
-      pnpm-build-script:
+      pnpm-lint-script:
         required: true
         type: string
-        default: 'build'
-      pnpm-test-script:
-        required: true
-        type: string
-        default: 'test'
+        default: 'lint'
       node-version:
         required: true
         type: string
@@ -31,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
+        
       - name: Lint script
         run: pnpm ${{ inputs.pnpm-lint-script }}
   
