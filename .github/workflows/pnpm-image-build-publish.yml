@@ -1,0 +1,37 @@
+on:
+  workflow_call:
+    inputs:
+      pnpm-build-script:
+        required: true
+        type: string
+        default: 'build'
+      pnpm-test-script:
+        required: true
+        type: string
+        default: 'test'
+      node-version:
+        required: true
+        type: string
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ node-version }}
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint script
+        run: pnpm ${{ pnpm-lint-script }}
+  
