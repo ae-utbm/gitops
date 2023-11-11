@@ -99,6 +99,15 @@ jobs:
           ref: features/initial-setup
           path: gitops
       -
+        name: Fetch build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-build       
+          path: dist
+      - 
+        name: Get .dockerignore from gitops
+        run: cp gitops/templates/docker/.dockerignore .dockerignore
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       -
@@ -120,15 +129,6 @@ jobs:
             ghcr.io/${{ env.IMAGE_NAME }}
           tags: |
             type=sha,prefix=,suffix=,format=short     
-      -
-        name: Fetch build artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: dist-build       
-          path: dist
-      - 
-        name: Display structure of downloaded files
-        run: ls -R
       -
         name: Build and push
         uses: docker/build-push-action@v5
