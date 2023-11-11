@@ -129,7 +129,7 @@ jobs:
         with:
           context: .
           # Using the dockerfile in the gitops template
-          file: gitops/nodejs.Dockerfile
+          file: gitops/templates/docker/nodejs.Dockerfile
           build-contexts: |
             node=docker-image://node:${{ inputs.node-version }}-alpine
           push: true
