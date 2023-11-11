@@ -5,7 +5,7 @@ on:
         required: true
         type: string
         default: 'build:prod'
-      pnpm-lint-script:
+      lint-script:
         required: true
         type: string
         default: 'lint'
@@ -41,7 +41,7 @@ jobs:
         run: pnpm install
       - 
         name: Lint script
-        run: pnpm ${{ inputs.pnpm-lint-script }}
+        run: pnpm ${{ inputs.lint-script }}
 
   build:
     name: Dist build
