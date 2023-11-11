@@ -1,6 +1,10 @@
 on:
   workflow_call:
     inputs:
+      build-script:
+        required: true
+        type: string
+        default: 'build:prod'
       pnpm-lint-script:
         required: true
         type: string
@@ -39,6 +43,40 @@ jobs:
         name: Lint script
         run: pnpm ${{ inputs.pnpm-lint-script }}
 
+  build:
+    name: Dist build
+    runs-on: ubuntu-latest
+
+    steps:
+      - 
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      -
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - 
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'pnpm'
+      - 
+        name: Install dependencies
+        run: pnpm install
+      - 
+        name: build dist
+        run: pnpm ${{ inputs.build-script }}
+      -
+        name: Store build result 
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-build
+          path: |
+            dist
+            !dist/**/*.md
+          retention-days: 1
+
   build-push-docker:
     name: Image Build
     runs-on: ubuntu-latest
@@ -47,12 +85,17 @@ jobs:
       packages: write
     outputs:
       docker-image: ${{ steps.meta.outputs.tags }}
-    needs: [lint]
+    needs: [lint, build]
     steps:
-      - 
+      - # Get project repo
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      - # Get gitops repo
+        uses: actions/checkout@v4
+        with:
+          repository: ae-utbm/gitops
+          path: gitops
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -74,12 +117,21 @@ jobs:
           images: |
             ghcr.io/${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,prefix=,suffix=,format=short            
+            type=sha,prefix=,suffix=,format=short     
+      -
+        name: Fetch build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-build       
       -
         name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
+          # Using the dockerfile in the gitops template
+          file: gitops/nodejs.Dockerfile
+          build-contexts: |
+            node:docker-image://node:${{ node-version }}-alpine
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
