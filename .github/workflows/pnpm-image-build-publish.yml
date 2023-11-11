@@ -96,7 +96,7 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: cves
-          image: ${{ jobs.build-push-docker.outputs.docker-image }}
+          image: ${{ needs.build-push-docker.outputs.docker-image }}
           sarif-file: sarif.output.json
           summary: true
       -
