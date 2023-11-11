@@ -125,6 +125,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist-build       
+          path: dist
       -
         name: Build and push
         uses: docker/build-push-action@v5
