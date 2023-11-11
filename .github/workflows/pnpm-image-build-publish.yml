@@ -89,6 +89,9 @@ jobs:
   analyze-docker-image:
     name: Image Scan
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      packages: read
     needs: [build-push-docker]
     steps:
       -
