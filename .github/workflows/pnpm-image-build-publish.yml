@@ -100,6 +100,7 @@ jobs:
           image: ${{ needs.build-push-docker.outputs.docker-image }}
           sarif-file: sarif.output.json
           summary: true
+          write-comment: ${{ github.event_name == 'pull_request' }}
       -
         name: Upload SARIF result
         id: upload-sarif
