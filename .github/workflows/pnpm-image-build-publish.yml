@@ -40,7 +40,6 @@ jobs:
         run: pnpm ${{ inputs.pnpm-lint-script }}
 
   build-push-docker:
-    id: build-push-docker
     name: Docker build
     runs-on: ubuntu-latest
     permissions:
