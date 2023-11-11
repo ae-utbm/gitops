@@ -126,6 +126,9 @@ jobs:
         with:
           name: dist-build       
           path: dist
+      - 
+        name: Display structure of downloaded files
+        run: ls -R
       -
         name: Build and push
         uses: docker/build-push-action@v5
