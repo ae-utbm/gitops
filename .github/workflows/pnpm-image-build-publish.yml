@@ -153,6 +153,13 @@ jobs:
     needs: [build-push-docker]
     steps:
       -
+        name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
         name: Analyze for critical and high CVEs
         id: docker-scout-cves
         uses: docker/scout-action@v1
