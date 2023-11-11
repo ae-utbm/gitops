@@ -131,7 +131,7 @@ jobs:
           # Using the dockerfile in the gitops template
           file: gitops/nodejs.Dockerfile
           build-contexts: |
-            node:docker-image://node:${{ inputs.node-version }}-alpine
+            node=docker-image://node:${{ inputs.node-version }}-alpine
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
