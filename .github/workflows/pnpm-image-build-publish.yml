@@ -148,7 +148,7 @@ jobs:
     name: Image Scan
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      security-events: write
       packages: read
     needs: [build-push-docker]
     steps:
