@@ -160,19 +160,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
-        name: Analyze for critical and high CVEs
-        id: docker-scout-cves
-        uses: docker/scout-action@v1
+        name: Scan image for critical vulnerabilities
+        uses: anchore/scan-action@v3
+        id: scan
         with:
-          command: cves
           image: ${{ needs.build-push-docker.outputs.docker-image }}
-          sarif-file: sarif.output.json
-          summary: true
-          write-comment: ${{ github.event_name == 'pull_request' }}
+          fail-build: true
+          severity-cutoff: critical
+          output-format: sarif
       -
         name: Upload SARIF result
         id: upload-sarif
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: sarif.output.json
+          sarif_file: ${{ steps.scan.outputs.sarif }}
   
