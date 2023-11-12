@@ -1,6 +1,7 @@
 FROM node AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+RUN apk update && apk upgrade
 RUN corepack enable
 COPY . /app
 WORKDIR /app
